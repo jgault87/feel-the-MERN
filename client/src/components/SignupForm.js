@@ -13,7 +13,7 @@ const SignupForm = () => {
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
 
-   // define mutation for adding a user
+   // define mutation for adding a user function
    const [createUser] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
@@ -36,13 +36,7 @@ const SignupForm = () => {
         variables: {...userFormData}
       });
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const { token, user } = await response.json();
-      console.log(user);
-      Auth.login(token);
+      Auth.login(data.addUser.token);
     } catch (err) {
       console.error(err);
       setShowAlert(true);
@@ -53,6 +47,8 @@ const SignupForm = () => {
       email: '',
       password: '',
     });
+
+  
   };
 
   return (
