@@ -19,11 +19,17 @@ const typeDefs = gql`
         savedBooks: [Book]        
     }
     type Query {
-        me: User
+        users: [User]
+		user(username: String!): User
+		books(username: String): [Book]
+		book(bookId: String!): Book
+		me: User
     }
+    
     type Auth {
     token: ID!
     user: User
+
     }
     input SavedBookInput {
         authors: [String]
