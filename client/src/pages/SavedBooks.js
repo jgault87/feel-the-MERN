@@ -1,4 +1,4 @@
-// import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
 // import { getMe, deleteBook } from '../utils/API';
@@ -26,23 +26,24 @@ const SavedBooks = () => {
 
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-
     if (!token) {
       return false;
     }
 
     try {
-      await deleteBook({
-        variables: {bookId: bookId},
-        update: cache => {
-          const data = cache.readQuery({ query: GET_ME });
-          const userDataCache = data.me;
-          const savedBooksCache = userDataCache.savedBooks;
-          const updatedBookCache = savedBooksCache.filter((book) => book.bookId !== bookId);
-          data.me.savedBooks = updatedBookCache;
-          cache.writeQuery({ query: GET_ME , data: {data: {...data.me.savedBooks}}})
-        }
-      });
+			await deleteBook({
+				variables: { bookId },
+				update(cache, { data: { deleteBook } }) {
+					try {
+						cache.writeQuery({
+							query: GET_ME,
+							data: { me: deleteBook }
+						});
+					} catch (err) {
+						console.error(err);
+					}
+				}
+			});
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {

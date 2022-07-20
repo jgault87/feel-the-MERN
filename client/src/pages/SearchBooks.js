@@ -17,7 +17,7 @@ const SearchBooks = () => {
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
-  //savebook func to use mutation instead of put request
+  //savebook func to use mutation instead of post request
   const [saveBook] = useMutation(SAVE_BOOK)
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
@@ -49,6 +49,7 @@ const SearchBooks = () => {
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks?.thumbnail || '',
+        link: book.volumeInfo.infoLink || ''
       }));
 
       setSearchedBooks(bookData);
@@ -58,11 +59,13 @@ const SearchBooks = () => {
     }
   };
 
+  
+
   // create function to handle saving a book to our database
   const handleSaveBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-
+     console.log(bookToSave)
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -73,13 +76,17 @@ const SearchBooks = () => {
     try {
       await saveBook({
         variables: {book: bookToSave},
-        update: cache => {
-          const {me} = cache.readQuery({ query: GET_ME });
-          // console.log(me)
-          
-          cache.writeQuery({ query: GET_ME , data: {me: { ...me, savedBooks: [...me.savedBooks, bookToSave] } } })
-        }
-      });
+        update(cache, { data: { saveBook } }) {
+					try {
+						cache.writeQuery({
+							query: GET_ME,
+							data: { me: saveBook }
+						});
+					} catch (err) {
+						console.error(err);
+					}
+				}
+			});
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
