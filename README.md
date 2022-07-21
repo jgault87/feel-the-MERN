@@ -3,7 +3,7 @@
 
 [![license](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-
+![](screenshot.jpg)
 
 ## Technologies
   ![](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
@@ -61,7 +61,7 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 for Books and Login/Signup and an input field to search for books and a submit
 button
 
-![](screenshot.jpg)
+
 
   ## Table of Contents
   * [Installation](#installation)
