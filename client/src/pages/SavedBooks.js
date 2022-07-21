@@ -21,7 +21,10 @@ const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
   const [deleteBook, { error }] = useMutation(REMOVE_BOOK);
   const userData = data?.me || {};
-  const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds);
+
+
+	console.log(data);
+ 
 
   if (!userData?.username) {
     return <h4>You need to be logged in to view your saved books</h4>;
@@ -41,7 +44,7 @@ const SavedBooks = () => {
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
       console.log(bookId)
-      setSavedBookIds(savedBookIds.filter(id => id !== bookId));
+      
     } catch (err) {
       console.error(err);
     }
